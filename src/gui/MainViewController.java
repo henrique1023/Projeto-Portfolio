@@ -34,7 +34,7 @@ public class MainViewController implements Initializable {
 
 	@FXML
 	public void onMenuItemDepartmentAction() {
-
+		loadView("/gui/DepartmentList.fxml");
 	}
 
 	@FXML
@@ -45,21 +45,31 @@ public class MainViewController implements Initializable {
 	@Override
 	public void initialize(URL url, ResourceBundle rb) {
 	}
-	
-	//criando a tela dentro da tela
+
+	// criando a tela dentro da tela e obrigando a ela ser sincronizado
 	public synchronized void loadView(String absoluteName) {
 		try {
 			FXMLLoader loader = new FXMLLoader(getClass().getResource(absoluteName));
 			VBox newVBox = loader.load();
 			
+			//Instancia a cena principal
 			Scene mainScene = Main.getMainScene();
 			
-			VBox mainVBox = (VBox)((ScrollPane) mainScene.getRoot()).getContent();
+			//pega o elemento VBox da tela principal
+			VBox mainVBox = (VBox) ((ScrollPane) mainScene.getRoot()).getContent();
 			
+			//Pega o primeiro elemento children da tela e salva tudo na variavel
 			Node mainMenu = mainVBox.getChildren().get(0);
+			
+			//Limpa a tela
 			mainVBox.getChildren().clear();
+			
+			//Recoloca a primeira cena
 			mainVBox.getChildren().add(mainMenu);
+			
+			//Adiciona os elementos da VBox nova
 			mainVBox.getChildren().addAll(newVBox.getChildren());
+			
 		} catch (IOException e) {
 			Alerts.showAlert("IO Exception", "Error loading vier", e.getMessage(), AlertType.ERROR);
 		}
