@@ -14,5 +14,13 @@ public class DepartmentService {
 	public List<Department> findAll(){
 		return dao.findAll();
 	}
-
+	
+	//esse metodo que salva no banco o objeto passado
+	public void saveOrUptade(Department obj) {
+		if(obj.getId() == null) {
+			dao.insert(obj);
+		}else {
+			dao.update(obj);
+		}
+	}
 }

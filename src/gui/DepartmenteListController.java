@@ -88,8 +88,12 @@ public class DepartmenteListController implements Initializable{
 			FXMLLoader loader = new FXMLLoader(getClass().getResource(absoluteName));
 			Pane pane = loader.load();
 			
+			//esse metodo injeta o department iniciando o objeto
+			//sempre que tem que ter um objeto no formulario
+			//precisa injetar ele aqui
 			DepartmentFormController controller = loader.getController();
 			controller.setDepartment(obj);
+			controller.setDepartmentService(new DepartmentService());
 			controller.updateFormData();
 			
 			Stage dialogStage = new Stage();
