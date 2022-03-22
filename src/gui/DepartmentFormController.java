@@ -97,9 +97,11 @@ public class DepartmentFormController implements Initializable{
 		ValidationException exception = new ValidationException("Validation Errors");
 		
 		obj.setId(Utils.tryParseToInt(txtId.getText()));
+		
 		if(txtName.getText() == null || txtName.getText().trim().equals("")) {
 			exception.addError("name", "Fields can't be emply");
 		}
+		
 		obj.setName(txtName.getText());
 		
 		if(exception.getErrors().size() > 0) {
