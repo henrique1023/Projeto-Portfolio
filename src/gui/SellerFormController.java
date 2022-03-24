@@ -1,6 +1,8 @@
 package gui;
 
 import java.net.URL;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -17,6 +19,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
+import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import model.entities.Seller;
@@ -44,10 +47,28 @@ public class SellerFormController implements Initializable{
 	private TextField txtId;
 	
 	@FXML
-	private Label labelErrorName;
+	private TextField txtEmail;
+	
+	@FXML
+	private DatePicker dpBirthDate;
+	
+	@FXML
+	private TextField txtBaseSalary;
 	
 	@FXML
 	private Label labelErrorId;
+	
+	@FXML
+	private Label labelErrorName;
+	
+	@FXML
+	private Label labelErrorEmail;
+	
+	@FXML
+	private Label labelErrorBaseSalary;
+	
+	@FXML
+	private Label labelErrorBirthDate;
 	
 	public void setSeller(Seller entity) {
 		this.entity = entity;
@@ -91,6 +112,7 @@ public class SellerFormController implements Initializable{
 		}
 	}
 
+	//esse metodo que atribui os atributos passados no classe Seller
 	private Seller getFormData() {
 		Seller obj = new Seller();
 		
@@ -103,6 +125,14 @@ public class SellerFormController implements Initializable{
 		}
 		
 		obj.setName(txtName.getText());
+		
+		if(txtEmail.getText() == null || txtName.getText().trim().equals("")) {
+			exception.addError("email", "Fields can't be emply");
+		}
+		
+		obj.setEmail(txtEmail.getText());
+		
+		
 		
 		if(exception.getErrors().size() > 0) {
 			throw exception;
@@ -122,15 +152,25 @@ public class SellerFormController implements Initializable{
 	
 	public void initializeNodes() {
 		Constraints.setTextFieldInteger(txtId);
-		Constraints.setTextFieldMaxLength(txtName, 30);
+		Constraints.setTextFieldMaxLength(txtName, 70);
+		Constraints.setTextFieldDouble(txtBaseSalary);
+		Constraints.setTextFieldMaxLength(txtEmail, 60);
+		Utils.formatDatePicker(dpBirthDate, "dd/MM/yyyy");
 	}
 	
+	//esse metodo insere os valores que estão na entidade no formulario
 	public void updateFormData() {
 		if(entity == null) {
 			throw new IllegalStateException("Entity was null!!");
 		}
 		txtId.setText(String.valueOf(entity.getId()));
 		txtName.setText(entity.getName());
+		txtEmail.setText(entity.getEmail());
+		txtBaseSalary.setText(String.format("%.2f" ,entity.getBasaSalary()));
+		//para deixar no formato aceito pela maquina, o date precisa desse tratamento
+		if(entity.getBirthDate() != null) {
+			dpBirthDate.setValue(LocalDate.ofInstant(entity.getBirthDate().toInstant(), ZoneId.systemDefault()));
+		}
 	}
 	
 	//esse metodo verifica se tem o erro e manda ele para o label
