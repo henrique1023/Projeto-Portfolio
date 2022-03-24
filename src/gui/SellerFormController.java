@@ -1,9 +1,11 @@
 package gui;
 
 import java.net.URL;
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
@@ -141,12 +143,28 @@ public class SellerFormController implements Initializable {
 
 		obj.setName(txtName.getText());
 
-		if (txtEmail.getText() == null || txtName.getText().trim().equals("")) {
+		if (txtEmail.getText() == null || txtEmail.getText().trim().equals("")) {
 			exception.addError("email", "Fields can't be emply");
 		}
 
 		obj.setEmail(txtEmail.getText());
+		
+		if (txtBaseSalary.getText() == null || txtBaseSalary.getText().trim().equals("")) {
+			exception.addError("baseSalary", "Fields can't be emply");
+		}
 
+		obj.setBasaSalary(Utils.tryParseToDouble(txtBaseSalary.getText()));
+	
+		if (dpBirthDate.getValue() == null) {
+			exception.addError("birthDate", "Fields can't be emply");
+		}else {
+			Instant instant = Instant.from(dpBirthDate.getValue().atStartOfDay(ZoneId.systemDefault()));
+		
+			obj.setBirthDate(Date.from(instant));
+		}
+		
+		obj.setDepartment(comboBoxDepartment.getValue());
+		
 		if (exception.getErrors().size() > 0) {
 			throw exception;
 		}
@@ -208,10 +226,17 @@ public class SellerFormController implements Initializable {
 	// esse metodo verifica se tem o erro e manda ele para o label
 	public void setErrorsMessages(Map<String, String> errors) {
 		Set<String> fields = errors.keySet();
-
-		if (fields.contains("name")) {
-			labelErrorName.setText(errors.get("name"));
+		
+		labelErrorName.setText(fields.contains("name") ? errors.get("name") : "");
+		labelErrorEmail.setText(fields.contains("email") ? errors.get("email") : "");
+		labelErrorBaseSalary.setText(fields.contains("baseSalary") ? errors.get("baseSalary") : "");
+		if (fields.contains("birthDate")) {
+			labelErrorBirthDate.setText(errors.get("birthDate"));
+		}else {
+			labelErrorBirthDate.setText("");
 		}
+		labelErrorBirthDate.setText(fields.contains("birthDate") ? errors.get("birthDate") : "");
+		
 	}
 
 	private void initializeComboBoxDepartment() {

@@ -29,6 +29,14 @@ public class Utils {
 			return null;
 		}
 	}
+	
+	public static Double tryParseToDouble(String str) {
+		try {
+			return Double.parseDouble(str);
+		} catch (NumberFormatException e) {
+			return null;
+		}
+	}
 
 	// metodo de formação de DATE
 	// você coloca a tabela a ser formatada, e como vai ser o formato da data
